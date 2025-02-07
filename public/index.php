@@ -1,6 +1,5 @@
-<?php
-require_once __DIR__ . '/../autoload.php';
+<?php include 'header.php'; ?>
+<main>
 
-$db = Database::getInstance()->getConnection();
-
-echo "Database connected successfully!";
+</main>
+<?php include 'footer.php'; ?>
