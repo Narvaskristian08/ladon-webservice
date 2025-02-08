@@ -1,5 +1,5 @@
-<?php include 'header.php'; ?>
-<main>
+<?php
 
-</main>
-<?php include 'footer.php'; ?>
+require_once __DIR__ . '/../core/api.php'; // Load API Handler
+
+?>
