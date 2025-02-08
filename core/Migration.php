@@ -104,7 +104,7 @@ class Migration {
             echo "✅ Database reset and migrations re-applied!\n";
 
         } catch (PDOException $e) {
-            die("❌ Reset failed: " . $e->getMessage());
+            die("Reset failed: " . $e->getMessage());
         }
     }
 }
