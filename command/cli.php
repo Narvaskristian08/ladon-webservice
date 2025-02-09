@@ -21,6 +21,9 @@ if ($argc > 1){
         echo "📌 deb:reset → Reset the database and rerun migrations\n";
         echo "📌 deb:add-admin {name} {email} {password} → Add an admin user\n";
     } 
+    elseif ($cast == 'server:start'){
+        exec("php -S localhost:8000 -t public");
+    }
     elseif ($cast === 'deb:add-admin') {
         if ($argc < 5) {
             echo "⚠️ Error: Missing required parameters.\n";
