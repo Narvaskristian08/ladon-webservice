@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../core/Database.php';
+require_once __DIR__ . '/../core/Database.php';
 
 class UserModel {
     private $db;
@@ -9,59 +9,44 @@ class UserModel {
         $this->db = Database::getInstance()->getConnection();
     }
 
-    // Fetch all users
-    public function getAllUsers() {
-        $stmt = $this->db->prepare("SELECT * FROM users");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    // Create a new user
-    public function createUser($name, $email, $password) {
+    public function createUser($name, $email, $password, $level_type = 'user') {
         try {
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-            $stmt = $this->db->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
-            $stmt->execute([
-                ':name' => $name,
-                ':email' => $email,
-                ':password' => $hashedPassword
-            ]);
-            return ["message" => "User created successfully"];
+
+            $stmt = $this->db->prepare("INSERT INTO users (name, email, password, level_type) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$name, $email, $hashedPassword, $level_type]);
+
+            return ["success" => true, "message" => "User created successfully", "level" => $level_type];
         } catch (PDOException $e) {
-            return ["error" => "Error creating user: " . $e->getMessage()];
+            return ["error" => "Failed to create user: " . $e->getMessage()];
         }
     }
 
-    // Fetch a user by ID
-    public function getUserById($id) {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE id = :id");
-        $stmt->execute([':id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    // Update user details
-    public function updateUser($id, $name, $email) {
+    public function loginUser($email, $password) {
         try {
-            $stmt = $this->db->prepare("UPDATE users SET name = :name, email = :email WHERE id = :id");
-            $stmt->execute([
-                ':id' => $id,
-                ':name' => $name,
-                ':email' => $email
-            ]);
-            return ["message" => "User updated successfully"];
+            $stmt = $this->db->prepare("SELECT id, name, email, password, level_type FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($user && password_verify($password, $user['password'])) {
+                session_start();
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_name'] = $user['name'];
+                $_SESSION['user_email'] = $user['email'];
+                $_SESSION['user_level'] = $user['level_type'];
+
+                return ["success" => true, "message" => "Login successful", "user" => $user];
+            }
+
+            return ["error" => "Invalid email or password"];
         } catch (PDOException $e) {
-            return ["error" => "Error updating user: " . $e->getMessage()];
+            return ["error" => "Login failed: " . $e->getMessage()];
         }
     }
 
-    // Delete a user
-    public function deleteUser($id) {
-        try {
-            $stmt = $this->db->prepare("DELETE FROM users WHERE id = :id");
-            $stmt->execute([':id' => $id]);
-            return ["message" => "User deleted successfully"];
-        } catch (PDOException $e) {
-            return ["error" => "Error deleting user: " . $e->getMessage()];
-        }
+    public function logoutUser() {
+        session_start();
+        session_destroy();
+        return ["success" => true, "message" => "Logged out successfully"];
     }
 }
