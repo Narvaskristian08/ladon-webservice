@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../core/Migration.php';
+require_once __DIR__ . '/../database/migrations/Migration.php';
 
 // Run the migration script
 if ($argc > 1){
