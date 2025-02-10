@@ -9,44 +9,66 @@ class UserModel {
         $this->db = Database::getInstance()->getConnection();
     }
 
+    // ✅ Create a new user
     public function createUser($name, $email, $password, $level_type = 'user') {
-        try {
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $this->db->prepare("INSERT INTO users (name, email, password, level_type) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$name, $email, $hashedPassword, $level_type]);
 
-            $stmt = $this->db->prepare("INSERT INTO users (name, email, password, level_type) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$name, $email, $hashedPassword, $level_type]);
-
-            return ["success" => true, "message" => "User created successfully", "level" => $level_type];
-        } catch (PDOException $e) {
-            return ["error" => "Failed to create user: " . $e->getMessage()];
-        }
+        return ["message" => "User created successfully"];
     }
 
+    // ✅ Get all users
+    public function getAllUsers() {
+        $stmt = $this->db->query("SELECT id, name, email, level_type, created_at FROM users");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // ✅ Get total users count
+    public function getTotalUsers() {
+        $stmt = $this->db->query("SELECT COUNT(*) as total_users FROM users");
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public function countUsers() {
+        $stmt = $this->db->query("SELECT COUNT(*) as total FROM users");
+        $result = $stmt->fetch();
+        return $result['total'] ?? 0;
+    }
+    
+    // ✅ Find user by email
+    public function findUserByEmail($email) {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // ✅ User login
     public function loginUser($email, $password) {
-        try {
-            $stmt = $this->db->prepare("SELECT id, name, email, password, level_type FROM users WHERE email = ?");
-            $stmt->execute([$email]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user = $this->findUserByEmail($email);
 
-            if ($user && password_verify($password, $user['password'])) {
-                session_start();
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_name'] = $user['name'];
-                $_SESSION['user_email'] = $user['email'];
-                $_SESSION['user_level'] = $user['level_type'];
-
-                return ["success" => true, "message" => "Login successful", "user" => $user];
-            }
-
+        if ($user && password_verify($password, $user['password'])) {
+            // Generate a simple session token (you can improve this with JWT)
+            $_SESSION['user'] = [
+                'id' => $user['id'],
+                'email' => $user['email'],
+                'level_type' => $user['level_type']
+            ];
+            return ["message" => "Login successful", "user" => $_SESSION['user']];
+        } else {
             return ["error" => "Invalid email or password"];
-        } catch (PDOException $e) {
-            return ["error" => "Login failed: " . $e->getMessage()];
         }
     }
 
+    // ✅ User logout
     public function logoutUser() {
-        session_start();
         session_destroy();
-        return ["success" => true, "message" => "Logged out successfully"];
+        return ["message" => "User logged out successfully"];
+    }
+
+    // ✅ Delete a user by ID
+    public function deleteUser($id) {
+        $stmt = $this->db->prepare("DELETE FROM users WHERE id = ?");
+        $stmt->execute([$id]);
+        return ["message" => "User deleted successfully"];
     }
 }

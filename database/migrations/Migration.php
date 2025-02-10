@@ -23,15 +23,6 @@ class Migration {
             )");
             echo "✅ Table 'users' created successfully!\n";
 
-            // ✅ Create Passwords Table
-            $db->exec("CREATE TABLE IF NOT EXISTS passwords (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                user_id INT NOT NULL,
-                password_hash VARCHAR(255) NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-            )");
-            echo "✅ Table 'passwords' created successfully!\n";
 
             // ✅ Create Products Table (Fixed `product_image` type)
             $db->exec("CREATE TABLE IF NOT EXISTS products (

@@ -9,6 +9,7 @@ class AuthController {
         $this->userModel = new UserModel();
     }
 
+    // ✅ Handle user login
     public function login() {
         header('Content-Type: application/json');
 
@@ -27,9 +28,24 @@ class AuthController {
         echo json_encode($result);
     }
 
+    // ✅ Handle user logout
     public function logout() {
         header('Content-Type: application/json');
         $result = $this->userModel->logoutUser();
+        echo json_encode($result);
+    }
+
+    // ✅ Get total users
+    public function totalUsers() {
+        header('Content-Type: application/json');
+        $result = $this->userModel->countUsers();
+        echo json_encode($result);
+    }
+
+    // ✅ Delete a user
+    public function deleteUser($id) {
+        header('Content-Type: application/json');
+        $result = $this->userModel->deleteUser($id);
         echo json_encode($result);
     }
 }
