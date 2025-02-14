@@ -18,4 +18,4 @@ Router::add('POST', '/api/login', function() {
 });
 
 Router::dispatch();
-exit; // Make sure the script stops executing after dispatch
+exit; 
