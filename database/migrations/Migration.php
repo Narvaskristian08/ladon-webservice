@@ -28,7 +28,7 @@ class Migration {
                 product_image LONGBLOB, 
                 product_name VARCHAR(255) NOT NULL,
                 product_price INT NOT NULL,
-                stock INT NOT NULL DEFAULT 10,
+                stock INT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )");
             echo "✅ Table 'products' created successfully!\n";

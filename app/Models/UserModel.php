@@ -15,13 +15,7 @@ class UserModel {
         $stmt = $this->db->prepare("INSERT INTO users (name, email, password, level_type) VALUES (?, ?, ?, ?)");
         $stmt->execute([$name, $email, $hashedPassword, $level_type]);
 
-        return ["message" => "User created successfully"];
-    }
-
-    // ✅ Get total users count
-    public function getTotalUsers() {
-        $stmt = $this->db->query("SELECT COUNT(*) as total_users FROM users");
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return ["message" => "User registered successfully"];
     }
 
     // ✅ Find user by email
@@ -31,72 +25,44 @@ class UserModel {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // ✅ User login
-public function loginUser($email, $password, $remember = false) {
-    $user = $this->findUserByEmail($email);
+    // ✅ User Login with "Remember Me" functionality
+    public function loginUser($email, $password, $rememberMe = false) {
+        $user = $this->findUserByEmail($email);
 
-    if ($user && password_verify($password, $user['password'])) {
-      
-        $_SESSION['user'] = [
-            'id' => $user['id'],
-            'email' => $user['email'],
-            'level_type' => $user['level_type']
-        ];
+        if ($user && password_verify($password, $user['password'])) {
+            session_start();
 
-        // ✅ If "Remember Me" is checked, store login token in a cookie
-        if ($remember) {
-            $token = bin2hex(random_bytes(32));
-            setcookie('auth_token', $token, time() + (86400 * 30), "/"); // 30 days
-
-            // Store token in database
-            $stmt = $this->db->prepare("UPDATE users SET auth_token = ? WHERE id = ?");
-            $stmt->execute([$token, $user['id']]);
-        }
-
-        return ["message" => "Login successful", "user" => $_SESSION['user']];
-    } else {
-        return ["error" => "Invalid email or password"];
-    }
-}
-
-public function checkLogin() {
-    session_start();
-
-    if (isset($_SESSION['user'])) {
-        return $_SESSION['user']; // User is logged in
-    }
-
-    // If session not found, check Remember Me token
-    if (isset($_COOKIE['auth_token'])) {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE auth_token = ?");
-        $stmt->execute([$_COOKIE['auth_token']]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user) {
+            // ✅ Store user session
             $_SESSION['user'] = [
                 'id' => $user['id'],
                 'email' => $user['email'],
                 'level_type' => $user['level_type']
             ];
-            return $_SESSION['user'];
+
+            // ✅ If "Remember Me" is checked, store in cookies
+            if ($rememberMe) {
+                $token = bin2hex(random_bytes(32)); // Generate a secure token
+                setcookie("user_email", $email, time() + (86400 * 30), "/"); // 30 days
+                setcookie("auth_token", $token, time() + (86400 * 30), "/");
+
+                // ✅ Save token in DB for validation
+                $stmt = $this->db->prepare("UPDATE users SET auth_token = ? WHERE email = ?");
+                $stmt->execute([$token, $email]);
+            }
+
+            return ["message" => "Login successful", "user" => $_SESSION['user']];
+        } else {
+            return ["error" => "Invalid email or password"];
         }
     }
 
-    return null; // Not logged in
-}
-public function logoutUser() {
-    session_start();
-    session_destroy();
+    // ✅ Get total users count
+    public function getTotalUsers() {
+        $stmt = $this->db->query("SELECT COUNT(*) as total_users FROM users");
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
-    // Remove Remember Me cookie
-    setcookie('auth_token', '', time() - 3600, "/");
-
-    return ["message" => "User logged out successfully"];
-}
-
-
-
-    // ✅ Delete user by ID
+    // ✅ Delete user
     public function deleteUser($id) {
         $stmt = $this->db->prepare("DELETE FROM users WHERE id = ?");
         $stmt->execute([$id]);

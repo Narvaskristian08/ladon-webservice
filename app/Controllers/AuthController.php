@@ -47,10 +47,14 @@ class AuthController {
 
         $result = $this->userModel->loginUser($email, $password, $rememberMe);
 
-        if (isset($result['user']) && $result['user']['level_type'] === 'admin') {
-            echo json_encode(["message" => "Login successful", "redirect" => "/dashboard.php"]);
+        if (isset($result['user'])) {
+            if ($result['user']['level_type'] === 'admin') {
+                echo json_encode(["message" => "Login successful", "redirect" => "/admin/dashboard.php"]);
+            } else {
+                echo json_encode(["message" => "Login successful", "redirect" => "/dashboard.php"]);
+            }
         } else {
-            echo json_encode(["message" => "Login successful", "redirect" => "/home.php"]);
+            echo json_encode(["error" => "Invalid email or password"]);
         }
     }
 
