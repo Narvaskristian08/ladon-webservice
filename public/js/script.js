@@ -13,10 +13,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function togglePasswordVisibility(inputField, icon) {
         if (inputField.type === "password") {
             inputField.type = "text";
-            icon.src = "Invisible.png";
+            icon.src = "img/svg/Eye.svg";
         } else {
             inputField.type = "password";
-            icon.src = "Invisible.png";
+            icon.src = "img/svg/Noeye.svg";
         }
     }
 

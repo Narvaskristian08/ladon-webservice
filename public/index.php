@@ -7,5 +7,5 @@ if (strpos($requestUri, '/api') === 0) {
 }
 
 // Load frontend view
-require_once __DIR__ . '/../app/Views/home.php';
+require_once __DIR__ . '/../app/Views/auth.php';
 ?>

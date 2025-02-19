@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Ladon</title>
-    <link rel="stylesheet" href="css\styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body>
 
+<body>
 <div class="wrapper" id="wrapper">
    
     <div class="img-container">
-        <img src="asset/Rectangle 2225.png" alt="Books & Study Theme">
+        <img src="/img/Rectangle 2225.png" alt="Books & Study Theme">
     </div>
 
 <!--LOGINNNNNNNNNNNN-->
     <div class="form-container login-container">
         <div class="login-logo">
-            <img src="asset/Group 12 24.png" alt="Ladon Logo">
+            <img src="/img/Group 12 24.png" alt="Ladon Logo">
         </div>
         <h2 class="login-heading">Welcome to Ladon</h2>
         <p class="login-paragraph">Please enter your registered email and password to login.</p>
@@ -26,7 +26,7 @@
             <div class="login-input-container">
                 <label class="login-input-label" for="login-email">Email</label>
                 <div class="login-input-group">
-                    <img src="asset/Letter.png" class="login-input-icon" alt="Email">
+                    <img src="/img/svg/Email.svg" class="login-input-icon" alt="Email">
                     <input type="email" placeholder="Enter your email" required>
                 </div>
             </div>
@@ -34,18 +34,18 @@
             <div class="login-input-container">
                 <label class="login-input-label" for="login-password">Password</label>
                 <div class="login-input-group">
-                    <img src="asset/Lock.png" class="login-input-icon" alt="Password">
+                    <img src="/img/svg/Password.svg" class="login-input-icon" alt="Password">
                     <input type="password" id="password" placeholder="Enter your password" required>
-                    <img src="asset/Invisible.png" class="toggle-password" id="togglePassword" alt="Toggle Password">
+                    <img src="img/svg/Noeye.svg" class="toggle-password" id="togglePassword" alt="Toggle Password">
                 </div>
             </div>
 
             <a href="#" class="forgot-password">Forgot your password?</a>
             <button type="submit" class="login-btn">LOGIN</button>
             <p class="or-text">or</p>
-            <div class="social-login">
-                <a href="#" class="login-social-btn"><img src="asset/Facebook.png" alt="Facebook"></a>
-                <a href="#" class="login-social-btn"><img src="asset/Google.png" alt="Google"></a>
+            <div class="login-social-login">
+                <a href="#" class="login-social-btn"><img src="/img/Facebook.png" alt="Facebook"></a>
+                <a href="#" class="login-social-btn"><img src="/img/Google.png" alt="Google"></a>
             </div>
         </form>
 
@@ -55,7 +55,7 @@
 <!--SIGNNNNUPPPPPPPPPP-->
     <div class="form-container signup-container hidden">
         <div class="signup-logo">
-            <img src="Group 12 24.png" alt="Ladon Logo">
+            <img src="/img/Group 12 24.png" alt="Ladon Logo">
         </div>
         <h2 class="signup-heading">Create your own account for free!</h2>
         <p class="signup-paragraph">Please fill all the fields and create your own password.</p>
@@ -64,7 +64,7 @@
             <div class="signup-input-container">
                 <label class="signup-input-label" for="signup-name">UserName</label>
                 <div class="signup-input-group">
-                    <img src="􀉩.png" class="signup-input-icon" alt="Username">
+                    <img src="/img/svg/user.svg" class="signup-input-icon" alt="Username">
                     <input type="text" placeholder="Create your username" required>
                 </div>
             </div>
@@ -72,7 +72,7 @@
             <div class="signup-input-container">
                 <label class="signup-input-label" for="signup-email">Email</label>
                 <div class="signup-input-group">
-                    <img src="Letter.png" class="signup-input-icon" alt="Email">
+                    <img src="/img/svg/Email.svg" class="signup-input-icon" alt="Email">
                     <input type="email" placeholder="Please enter your email" required>
                 </div>
             </div>
@@ -80,25 +80,25 @@
             <div class="signup-input-container">
                 <label class="signup-input-label" for="signup-password">Password</label>
                 <div class="signup-input-group">
-                    <img src="Lock.png" class="signup-input-icon" alt="Password">
+                    <img src="/img/svg/Password.svg" class="signup-input-icon" alt="Password">
                     <input type="password" id="signupPassword" placeholder="Create your password" required>
-                    <img src="Invisible.png" class="toggle-password" id="toggleSignupPassword" alt="Toggle Password">
+                    <img src="img/svg/Noeye.svg" class="toggle-password" id="toggleSignupPassword" alt="Toggle Password">
                 </div>
             </div>
 
             <div class="signup-input-container">
             <label class="signup-input-label" for="signup-contact">Contact</label>
                 <div class="signup-input-group">
-                    <img src="Call.png" class="signup-input-icon" alt="Contact">
+                    <img src="/img/svg/Contact.svg" class="signup-input-icon" alt="Contact">
                     <input type="text" placeholder="Please provide your contact" required>
                 </div>
             </div>
 
             <button type="submit" class="signup-btn">SIGNUP</button>
             <p class="or-text">or</p>
-            <div class="social-login">
-                <a href="#" class="signup-social-btn"><img src="Facebook.png" alt="Facebook"></a>
-                <a href="#" class="signup-social-btn"><img src="Google.png" alt="Google"></a>
+            <div class="signup-social-login">
+                <a href="#" class="signup-social-btn"><img src="/img/Facebook.png" alt="Facebook"></a>
+                <a href="#" class="signup-social-btn"><img src="/img/Google.png" alt="Google"></a>
             </div>
         </form>
 
@@ -108,6 +108,6 @@
     
 </div>
 
-<script src="js/script.js"></script>
+<script src="/js/script.js"></script>
 </body>
 </html>
