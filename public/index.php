@@ -16,9 +16,10 @@ if (strpos($requestUri, '/api') === 0) {
 
 // Custom Routes for Frontend Pages
 $routes = [
-    '/home' => __DIR__ . '/../app/Views/home.php',
-    '/dashboard' => __DIR__ . '/../app/Views/dashboard.php',
-    '/auth' => __DIR__ . '/../app/Views/auth.php'
+    '/home' => __DIR__ . '/../app/Views/home.php', /*http://localhost:8000/ */
+    '/dashboard' => __DIR__ . '/../app/Views/dashboard.php',/*http://localhost:8000/dashboard*/
+    '/auth' => __DIR__ . '/../app/Views/auth.php',/* http://localhost:8000/auth*/
+    '/inventory' => __DIR__ . '/../app/Views/inventory.php'/*http://localhost:8000/inventory */
 ];
 
 // If route exists, load the corresponding page

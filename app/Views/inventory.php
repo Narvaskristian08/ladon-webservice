@@ -5,25 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory Dashboard</title>
     <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/inv.css">
 </head>
 
 <body>
     <div class="inventory-dashboard">
         <aside class="sidebar">
             <div class="logo">
-                <img src="Group 12 24.png" alt="Ladon Logo">
+                <img src="/img/Group 12 24.png" alt="Ladon Logo">
             </div>
             <nav class="navbar">
-                <ul class="nav-list">
-                    <li class="nav-item"><Dashboard</li>
-                    <li class="nav-item">Inventory Management</li>
-                    <li class="nav-item">Order Processing</li>
-                    <li class="nav-item">Sale Analytics</li>
-                    <li class="nav-item">Marketing Tools</li>
-                    <li class="nav-item">Customer Support</li>
-                    <li class="nav-item">Settings</li>
-                </ul>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="http://localhost:8000/dashboard"><li class="nav-item">Dashboard</a></li>
+                <li class="nav-item"><a href="http://localhost:8000/inventory">Inventory Management</a></li>
+                <li class="nav-item"><a href="orders.php">Order Processing</a></li>
+                <li class="nav-item"><a href="analytics.php">Sale Analytics</a></li>
+                <li class="nav-item"><a href="marketing.php">Marketing Tools</a></li>
+                <li class="nav-item"><a href="support.php">Customer Support</a></li>
+                <li class="nav-item"><a href="settings.php">Settings</a></li>
+            </ul>
             </nav>
         </aside>
 
