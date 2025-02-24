@@ -1,13 +1,13 @@
 <?php 
 session_start();
 
-// ✅ Ensure user is logged in
+//  Ensure user is logged in
 if (!isset($_SESSION['user'])) {
     header("Location: /auth");
     exit();
 }
 
-// ✅ Redirect if not admin
+//  Redirect if not admin
 if ($_SESSION['user']['level_type'] !== 'admin') {
     header("Location: /home");
     exit();
@@ -31,18 +31,7 @@ if ($_SESSION['user']['level_type'] !== 'admin') {
             <div class="logo">
                 <img src="/img/Group 12 24.png" alt="Ladon Logo">
             </div>
-            <nav class="navbar">
-            <ul class="nav-list">
-                <li class="nav-item"><a href="/dashboard">Dashboard</a></li>
-                <li class="nav-item"><a href="/inventory">Inventory Management</a></li>
-                <li class="nav-item"><a href="/orders">Order Processing</a></li>
-                <li class="nav-item"><a href="/analytics">Sale Analytics</a></li>
-                <li class="nav-item"><a href="/marketing">Marketing Tools</a></li>
-                <li class="nav-item"><a href="/support">Customer Support</a></li>
-                <li class="nav-item"><a href="/settings">Settings</a></li>
-                <li class="nav-item"><a href="#" id="logoutBtn">Logout</a></li>
-            </ul>
-            </nav>
+            <div id="sidebar-container"></div>
         </aside>
 
         <main class="content">
@@ -70,5 +59,6 @@ if ($_SESSION['user']['level_type'] !== 'admin') {
 
 <script src="/js/dashboard.js"></script>
 <script src="/js/auth.js"></script>
+<script src="/js/reusable.js"></script>
 </body>
 </html>

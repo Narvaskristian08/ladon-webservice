@@ -75,36 +75,4 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-
-    // ✅ Logout User (Now inside auth.js)
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", async function (event) {
-            event.preventDefault(); // Prevents default link behavior
-
-            console.log("Logout button clicked!"); // Debugging
-
-            try {
-                const response = await fetch("http://localhost:8000/api/logout", {
-                    method: "POST",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" }
-                });
-
-                const result = await response.json();
-                console.log("Logout API Response:", result);
-
-                if (response.ok) {
-                    alert(result.message);
-                    window.location.href = "/auth"; // ✅ Redirect to login page
-                } else {
-                    alert("Logout failed.");
-                }
-            } catch (error) {
-                console.error("Logout Error:", error);
-                alert("Something went wrong. Try again.");
-            }
-        });
-    } else {
-        console.error("Logout button not found!");
-    }
 });
