@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 </head>
 
@@ -12,7 +12,7 @@
     <div class="dashboard">
         <aside class="sidebar">
             <div class="logo">
-                <img src="Group 12 24.png" alt="Ladon Logo">
+                <img src="img/svg/Group 12 24.png" alt="Ladon Logo">
             </div>
             <nav class="navbar">
                 <ul class="nav-list">

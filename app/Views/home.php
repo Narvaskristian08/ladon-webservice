@@ -6,7 +6,6 @@
     <title>Home</title>
 </head>
 <body>
-    Home
 
  
 </body>

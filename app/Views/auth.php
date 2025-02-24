@@ -22,12 +22,12 @@
         <h2 class="login-heading">Welcome to Ladon</h2>
         <p class="login-paragraph">Please enter your registered email and password to login.</p>
 
-        <form>
+        <form id="loginForm">
             <div class="login-input-container">
                 <label class="login-input-label" for="login-email">Email</label>
                 <div class="login-input-group">
                     <img src="/img/svg/Email.svg" class="login-input-icon" alt="Email">
-                    <input type="email" placeholder="Enter your email" required>
+                    <input type="email" placeholder="Enter your email" id="login-email" required>
                 </div>
             </div>
 
@@ -35,7 +35,7 @@
                 <label class="login-input-label" for="login-password">Password</label>
                 <div class="login-input-group">
                     <img src="/img/svg/Password.svg" class="login-input-icon" alt="Password">
-                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <input type="password" id="login-password" placeholder="Enter your password" required>
                     <img src="img/svg/Noeye.svg" class="toggle-password" id="togglePassword" alt="Toggle Password">
                 </div>
             </div>
@@ -60,12 +60,12 @@
         <h2 class="signup-heading">Create your own account for free!</h2>
         <p class="signup-paragraph">Please fill all the fields and create your own password.</p>
 
-        <form class="signup-form">
+        <form id="signupForm">
             <div class="signup-input-container">
                 <label class="signup-input-label" for="signup-name">UserName</label>
                 <div class="signup-input-group">
                     <img src="/img/svg/user.svg" class="signup-input-icon" alt="Username">
-                    <input type="text" placeholder="Create your username" required>
+                    <input type="text" id="signup-name" placeholder="Enter your name" required>
                 </div>
             </div>
 
@@ -73,7 +73,7 @@
                 <label class="signup-input-label" for="signup-email">Email</label>
                 <div class="signup-input-group">
                     <img src="/img/svg/Email.svg" class="signup-input-icon" alt="Email">
-                    <input type="email" placeholder="Please enter your email" required>
+                    <input type="email" id="signup-email" placeholder="Enter your email" required>
                 </div>
             </div>
 
@@ -81,18 +81,18 @@
                 <label class="signup-input-label" for="signup-password">Password</label>
                 <div class="signup-input-group">
                     <img src="/img/svg/Password.svg" class="signup-input-icon" alt="Password">
-                    <input type="password" id="signupPassword" placeholder="Create your password" required>
+                    <input type="password" id="signup-password" placeholder="Create your password" required>
                     <img src="img/svg/Noeye.svg" class="toggle-password" id="toggleSignupPassword" alt="Toggle Password">
                 </div>
             </div>
 
             <div class="signup-input-container">
-            <label class="signup-input-label" for="signup-contact">Contact</label>
-                <div class="signup-input-group">
-                    <img src="/img/svg/Contact.svg" class="signup-input-icon" alt="Contact">
-                    <input type="text" placeholder="Please provide your contact" required>
-                </div>
-            </div>
+        <label class="signup-input-label" for="signup-contact">Contact</label>
+        <div class="signup-input-group">
+            <img src="/img/svg/Contact.svg" class="signup-input-icon" alt="Contact">
+            <input type="text" id="signup-contact" placeholder="Enter your contact number" required> 
+        </div>
+    </div>
 
             <button type="submit" class="signup-btn">SIGNUP</button>
             <p class="or-text">or</p>
@@ -103,11 +103,10 @@
         </form>
 
         <p class="signup-text">Already have an account? <a href="#" id="showLogin">Login</a></p>
-        
     </div>
-    
 </div>
 
+<script src="/js/auth.js"></script>
 <script src="/js/script.js"></script>
 </body>
 </html>

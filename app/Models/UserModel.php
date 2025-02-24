@@ -10,10 +10,10 @@ class UserModel {
     }
 
     // ✅ Create a new user
-    public function createUser($name, $email, $password, $level_type = 'user') {
+    public function createUser($name, $email, $password, $contact, $level_type = 'user') {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $this->db->prepare("INSERT INTO users (name, email, password, level_type) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$name, $email, $hashedPassword, $level_type]);
+        $stmt = $this->db->prepare("INSERT INTO users (name, email, password, contact, level_type) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$name, $email, $hashedPassword, $contact, $level_type]);
 
         return ["message" => "User registered successfully"];
     }
@@ -25,7 +25,7 @@ class UserModel {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // ✅ User Login with "Remember Me" functionality
+    // ✅ User Login with "Remember Me"
     public function loginUser($email, $password, $rememberMe = false) {
         $user = $this->findUserByEmail($email);
 
@@ -41,7 +41,7 @@ class UserModel {
 
             // ✅ If "Remember Me" is checked, store in cookies
             if ($rememberMe) {
-                $token = bin2hex(random_bytes(32)); // Generate a secure token
+                $token = bin2hex(random_bytes(32)); // Generate secure token
                 setcookie("user_email", $email, time() + (86400 * 30), "/"); // 30 days
                 setcookie("auth_token", $token, time() + (86400 * 30), "/");
 
@@ -54,18 +54,5 @@ class UserModel {
         } else {
             return ["error" => "Invalid email or password"];
         }
-    }
-
-    // ✅ Get total users count
-    public function getTotalUsers() {
-        $stmt = $this->db->query("SELECT COUNT(*) as total_users FROM users");
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    // ✅ Delete user
-    public function deleteUser($id) {
-        $stmt = $this->db->prepare("DELETE FROM users WHERE id = ?");
-        $stmt->execute([$id]);
-        return ["message" => "User deleted successfully"];
     }
 }

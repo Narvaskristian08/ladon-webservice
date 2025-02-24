@@ -9,24 +9,26 @@ class AuthController {
         $this->userModel = new UserModel();
     }
 
-    // ✅ Register a new user
+ 
     public function register() {
         header('Content-Type: application/json');
 
         $inputData = json_decode(file_get_contents("php://input"), true);
 
-        if (!isset($inputData['name'], $inputData['email'], $inputData['password'])) {
-            echo json_encode(["error" => "Missing name, email, or password"]);
+        if (!isset($inputData['name'], $inputData['email'], $inputData['password'], $inputData['contact'])) {
+            echo json_encode(["error" => "Missing required fields"]);
             return;
         }
 
         $name = $inputData['name'];
         $email = $inputData['email'];
         $password = $inputData['password'];
+        $contact = $inputData['contact'];
         $level_type = $inputData['level_type'] ?? 'user'; // Default to "user"
 
-        $result = $this->userModel->createUser($name, $email, $password, $level_type);
+        $result = $this->userModel->createUser($name, $email, $password, $contact, $level_type);
         echo json_encode($result);
+        exit;
     }
 
     // ✅ Login user
@@ -48,41 +50,30 @@ class AuthController {
         $result = $this->userModel->loginUser($email, $password, $rememberMe);
 
         if (isset($result['user'])) {
-            if ($result['user']['level_type'] === 'admin') {
-                echo json_encode(["message" => "Login successful", "redirect" => "/admin/dashboard.php"]);
-            } else {
-                echo json_encode(["message" => "Login successful", "redirect" => "/dashboard.php"]);
-            }
+            echo json_encode([
+                "message" => "Login successful",
+                "user" => $result['user'],
+                "redirect" => ($result['user']['level_type'] === 'admin') ? "/dashboard.php" : "/home.php"
+            ]);
+            exit;
+            
         } else {
             echo json_encode(["error" => "Invalid email or password"]);
+            exit;
         }
     }
 
-    // ✅ Logout user
+    // Logout user
     public function logout() {
         header('Content-Type: application/json');
         session_start();
-
-        // ✅ Clear session and cookies
         session_destroy();
+
+        //  Clear cookies
         setcookie("user_email", "", time() - 3600, "/");
-        setcookie("user_token", "", time() - 3600, "/");
+        setcookie("auth_token", "", time() - 3600, "/");
 
         echo json_encode(["message" => "Logout successful"]);
-    }
-
-    // ✅ Get total users count
-    public function totalUsers() {
-        header('Content-Type: application/json');
-        $totalUsers = $this->userModel->getTotalUsers();
-        echo json_encode($totalUsers);
-    }
-
-    // ✅ Delete user
-    public function deleteUser($id) {
-        header('Content-Type: application/json');
-
-        $result = $this->userModel->deleteUser($id);
-        echo json_encode($result);
+        exit;
     }
 }
