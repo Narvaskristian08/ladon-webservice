@@ -81,12 +81,10 @@ class AuthController {
       
     public function logout() {
         header('Content-Type: application/json');
+        session_start();
     
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-    
-        // ✅ Destroy session
+        // ✅ Clear session
+        $_SESSION = [];
         session_unset();
         session_destroy();
     
@@ -97,6 +95,7 @@ class AuthController {
         echo json_encode(["message" => "Logout successful", "redirect" => "/auth"]);
         exit;
     }
+    
     
     
 }
