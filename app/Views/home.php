@@ -17,7 +17,7 @@
                 <img src="img/Home.png">
                 <img src="img/Home (1).png">
                 <div class="home-profile">
-                    <a href="">SALVADOR <br> LOPEZ</a>
+                    <a href="http://localhost:8000/auth">SALVADOR <br> LOPEZ</a>
                     <img src="" alt="pfp">
                 </div>
             </div>
