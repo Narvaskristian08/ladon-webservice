@@ -27,13 +27,14 @@ if ($argc > 1){
     elseif ($cast === 'deb:add-admin') {
         if ($argc < 5) {
             echo "Error: Missing required parameters.\n";
-            echo "Usage: php command/cli.php deb:add-admin {name} {email} {password}\n";
+            echo "Usage: php command/cli.php deb:add-admin {name} {email} {password} {contact number}\n";
             exit;
         }
 
         $name = $argv[2];
         $email = $argv[3];
         $password = $argv[4];
+        $contact = $argv[5];
 
         $userModel = new UserModel();
         $result = $userModel->createUser($name, $email, $password ,$contact , 'admin');

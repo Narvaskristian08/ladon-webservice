@@ -30,15 +30,23 @@ class AuthController {
         echo json_encode($result);
         exit;
     }
+    public function totalUsers() {
+        header('Content-Type: application/json');
+        $totalUsers = $this->userModel->getTotalUsers();
+        echo json_encode(["total_users" => $totalUsers]);
+        exit;
+    }
+
+    
 
     // ✅ Login user
     public function login() {
         header('Content-Type: application/json');
-        session_start();
-        
- 
-        ob_start();
-        
+    
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    
         $inputData = json_decode(file_get_contents("php://input"), true);
     
         if (!isset($inputData['email'], $inputData['password'])) {
@@ -48,42 +56,47 @@ class AuthController {
     
         $email = $inputData['email'];
         $password = $inputData['password'];
-        $rememberMe = $inputData['remember_me'] ?? false;
     
-        $result = $this->userModel->loginUser($email, $password, $rememberMe);
+        $user = $this->userModel->findUserByEmail($email);
     
-
-        ob_clean();
+        if ($user && password_verify($password, $user['password'])) {
+            // ✅ Ensure "name" is included in the session
+            $_SESSION['user'] = [
+                'id' => $user['id'],
+                'name' => $user['name'], 
+                'email' => $user['email'],
+                'level_type' => $user['level_type']
+            ];
     
-        if (isset($result['user'])) {
-            $userRole = $result['user']['level_type'];
-    
-            $_SESSION['user_role'] = $userRole;
-    
-            if ($userRole === 'admin') {
-                echo json_encode(["message" => "Login successful", "redirect" => "/admin/dashboard"]);
-            } else {
-                echo json_encode(["message" => "Login successful", "redirect" => "/home"]);
-            }
+            echo json_encode(["message" => "Login successful", "redirect" => "/dashboard"]);
+            exit;
         } else {
-            http_response_code(401);
             echo json_encode(["error" => "Invalid email or password"]);
-        }
-    
-        exit(); 
-    }
-      
-        public function logout() {
-            header('Content-Type: application/json');
-            session_start();
-            session_destroy();
-    
-        
-            setcookie("user_email", "", time() - 3600, "/");
-            setcookie("auth_token", "", time() - 3600, "/");
-    
-            echo json_encode(["message" => "Logout successful"]);
             exit;
         }
+    }
+    
+    
+    
+      
+    public function logout() {
+        header('Content-Type: application/json');
+    
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    
+        // ✅ Destroy session
+        session_unset();
+        session_destroy();
+    
+        // ✅ Clear cookies
+        setcookie("user_email", "", time() - 3600, "/");
+        setcookie("auth_token", "", time() - 3600, "/");
+    
+        echo json_encode(["message" => "Logout successful", "redirect" => "/auth"]);
+        exit;
+    }
+    
     
 }

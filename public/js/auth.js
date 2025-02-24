@@ -36,8 +36,8 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Something went wrong. Please try again.");
         }
     });
-    
-    document.getElementById("loginForm").addEventListener("submit", async function (event) {
+    //login
+    document.getElementById("loginForm").addEventListener("submit", async function(event) {
         event.preventDefault();
     
         const email = document.getElementById("login-email").value;
@@ -46,22 +46,68 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch("http://localhost:8000/api/login", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({ email, password })
             });
     
-            const result = await response.json();
-            console.log(result); // ✅ Debugging: See if redirect is returned
+            const text = await response.text();
+            console.log("Raw API Response:", text);
+    
+            const jsonStart = text.indexOf("{"); // Find first JSON character
+            const jsonText = text.substring(jsonStart).trim(); // Remove extra HTML
+            const result = JSON.parse(jsonText);
     
             if (response.ok) {
                 alert("Login successful!");
-                window.location.href = result.redirect;  // ✅ Redirect to correct page
+                window.location.href = result.redirect;
             } else {
                 alert(result.error || "Login failed.");
             }
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Fetch Error:", error);
             alert("Something went wrong.");
         }
-    });    
+        
+
+    })
+    //logout
+    document.addEventListener("DOMContentLoaded", function () {
+        const logoutBtn = document.getElementById("logoutBtn");
+    
+        if (logoutBtn) {
+            logoutBtn.addEventListener("click", async function (event) {
+                event.preventDefault(); // Prevents default navigation
+    
+                console.log("Logout button clicked!"); // ✅ Debugging
+    
+                try {
+                    const response = await fetch("http://localhost:8000/api/logout", {
+                        method: "POST",
+                        credentials: "include",
+                        headers: { "Content-Type": "application/json" }
+                    });
+    
+                    const result = await response.json();
+                    console.log("Logout API Response:", result); // ✅ Debug API response
+    
+                    if (response.ok) {
+                        alert("Logout successful!");
+                        window.location.href = "/auth"; // ✅ Redirect to login
+                    } else {
+                        alert("Logout failed.");
+                    }
+                } catch (error) {
+                    console.error("Logout Error:", error);
+                    alert("Something went wrong. Try again.");
+                }
+            });
+        } else {
+            console.error("Logout button not found!"); // ✅ Debugging if button exists
+        }
+    });
+    
+    
 });    

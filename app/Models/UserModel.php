@@ -25,34 +25,74 @@ class UserModel {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+
+
     // ✅ User Login with "Remember Me"
     public function loginUser($email, $password, $rememberMe = false) {
-        $user = $this->findUserByEmail($email);
-
-        if ($user && password_verify($password, $user['password'])) {
+        // ✅ Prevent multiple sessions
+        if (session_status() === PHP_SESSION_NONE) {
             session_start();
-
-            // ✅ Store user session
+        }
+    
+        $user = $this->findUserByEmail($email);
+    
+        if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user'] = [
                 'id' => $user['id'],
                 'email' => $user['email'],
                 'level_type' => $user['level_type']
             ];
-
-            // ✅ If "Remember Me" is checked, store in cookies
+    
             if ($rememberMe) {
-                $token = bin2hex(random_bytes(32)); // Generate secure token
-                setcookie("user_email", $email, time() + (86400 * 30), "/"); // 30 days
+                $token = bin2hex(random_bytes(32));
+                setcookie("user_email", $email, time() + (86400 * 30), "/");
                 setcookie("auth_token", $token, time() + (86400 * 30), "/");
-
-                // ✅ Save token in DB for validation
+    
                 $stmt = $this->db->prepare("UPDATE users SET auth_token = ? WHERE email = ?");
                 $stmt->execute([$token, $email]);
             }
-
+    
             return ["message" => "Login successful", "user" => $_SESSION['user']];
         } else {
             return ["error" => "Invalid email or password"];
         }
     }
+    
+    public function getTotalUsers() {
+        $stmt = $this->db->query("SELECT COUNT(*) as total_users FROM users WHERE level_type = 'user'");
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total_users'] ?? 0;
+    }
+    
+    
+    
+    
+    // ✅ Check if the user is logged in
+public function checkLogin() {
+    session_start();
+
+    if (isset($_SESSION['user'])) {
+        return ["user" => $_SESSION['user']];
+    }
+
+    // ✅ Check Remember Me cookies
+    if (isset($_COOKIE['user_email']) && isset($_COOKIE['auth_token'])) {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ? AND auth_token = ?");
+        $stmt->execute([$_COOKIE['user_email'], $_COOKIE['auth_token']]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            $_SESSION['user'] = [
+                'id' => $user['id'],
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'level_type' => $user['level_type']
+            ];
+            return ["user" => $_SESSION['user']];
+        }
+    }
+
+    return ["error" => "Not logged in"];
+}
+
 }
