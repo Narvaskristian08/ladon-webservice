@@ -14,7 +14,8 @@ if (strpos($requestUri, '/api') === 0) {
 $routes = [
     '/' => __DIR__ . '/../app/Views/home.php',
     '/dashboard' => __DIR__ . '/../app/Views/dashboard.php',
-    '/auth' => __DIR__ . '/../app/Views/auth.php'
+    '/auth' => __DIR__ . '/../app/Views/auth.php',
+    '/inventory' => __DIR__ . '/../app/Views/inventory.php'
 ];
 
 if (isset($routes[$requestUri])) {
