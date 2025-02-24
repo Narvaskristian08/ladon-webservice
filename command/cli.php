@@ -17,16 +17,16 @@ if ($argc > 1){
     } 
     elseif ($cast === 'deb:help') {
         echo "Available Commands:\n";
-        echo "📌 deb:start → Start the backend and run migrations\n";
-        echo "📌 deb:reset → Reset the database and rerun migrations\n";
-        echo "📌 deb:add-admin {name} {email} {password} → Add an admin user\n";
+        echo "deb:start → Start the backend and run migrations\n";
+        echo "deb:reset → Reset the database and rerun migrations\n";
+        echo "deb:add-admin {name} {email} {password} → Add an admin user\n";
     } 
     elseif ($cast == 'server:start'){
         exec("php -S localhost:8000 -t public");
     }
     elseif ($cast === 'deb:add-admin') {
         if ($argc < 5) {
-            echo "⚠️ Error: Missing required parameters.\n";
+            echo "Error: Missing required parameters.\n";
             echo "Usage: php command/cli.php deb:add-admin {name} {email} {password}\n";
             exit;
         }
@@ -36,11 +36,11 @@ if ($argc > 1){
         $password = $argv[4];
 
         $userModel = new UserModel();
-        $result = $userModel->createUser($name, $email, $password, 'admin');
+        $result = $userModel->createUser($name, $email, $password ,$contact , 'admin');
 
         echo json_encode($result);
     } 
     else {
-        echo "❌ Invalid command! Use 'deb:help' for help.\n";
+        echo "Invalid command! Use 'deb:help' for help.\n";
     }
 }

@@ -35,45 +35,55 @@ class AuthController {
     public function login() {
         header('Content-Type: application/json');
         session_start();
-
+        
+ 
+        ob_start();
+        
         $inputData = json_decode(file_get_contents("php://input"), true);
-
+    
         if (!isset($inputData['email'], $inputData['password'])) {
             echo json_encode(["error" => "Missing email or password"]);
             return;
         }
-
+    
         $email = $inputData['email'];
         $password = $inputData['password'];
         $rememberMe = $inputData['remember_me'] ?? false;
-
+    
         $result = $this->userModel->loginUser($email, $password, $rememberMe);
+    
 
+        ob_clean();
+    
         if (isset($result['user'])) {
-            echo json_encode([
-                "message" => "Login successful",
-                "user" => $result['user'],
-                "redirect" => ($result['user']['level_type'] === 'admin') ? "/dashboard.php" : "/home.php"
-            ]);
-            exit;
-            
+            $userRole = $result['user']['level_type'];
+    
+            $_SESSION['user_role'] = $userRole;
+    
+            if ($userRole === 'admin') {
+                echo json_encode(["message" => "Login successful", "redirect" => "/admin/dashboard"]);
+            } else {
+                echo json_encode(["message" => "Login successful", "redirect" => "/home"]);
+            }
         } else {
+            http_response_code(401);
             echo json_encode(["error" => "Invalid email or password"]);
+        }
+    
+        exit(); 
+    }
+      
+        public function logout() {
+            header('Content-Type: application/json');
+            session_start();
+            session_destroy();
+    
+        
+            setcookie("user_email", "", time() - 3600, "/");
+            setcookie("auth_token", "", time() - 3600, "/");
+    
+            echo json_encode(["message" => "Logout successful"]);
             exit;
         }
-    }
-
-    // Logout user
-    public function logout() {
-        header('Content-Type: application/json');
-        session_start();
-        session_destroy();
-
-        //  Clear cookies
-        setcookie("user_email", "", time() - 3600, "/");
-        setcookie("auth_token", "", time() - 3600, "/");
-
-        echo json_encode(["message" => "Logout successful"]);
-        exit;
-    }
+    
 }
