@@ -11,7 +11,7 @@ class ProductModel {
 
     // ✅ Get all products
     public function getAllProducts() {
-        $stmt = $this->db->query("SELECT * FROM products");
+        $stmt = $this->db->query("SELECT product_name,product_price, stock FROM products");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
