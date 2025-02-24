@@ -31,7 +31,7 @@ if (logoutBtn) {
 
             if (response.ok) {
                 alert(result.message);
-                window.location.href = "/auth"; // ✅ Redirect to login page
+                window.location.href = "/auth"; //  Redirect to login page
             } else {
                 alert("Logout failed.");
             }

@@ -58,7 +58,6 @@ if ($_SESSION['user']['level_type'] !== 'admin') {
 </div>
 
 <script src="/js/dashboard.js"></script>
-<script src="/js/auth.js"></script>
 <script src="/js/reusable.js"></script>
 </body>
 </html>

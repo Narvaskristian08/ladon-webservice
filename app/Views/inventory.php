@@ -1,3 +1,19 @@
+<?php 
+session_start();
+
+//  Ensure user is logged in
+if (!isset($_SESSION['user'])) {
+    header("Location: /auth");
+    exit();
+}
+
+
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,22 +26,13 @@
 
 <body>
     <div class="inventory-dashboard">
-        <aside class="sidebar">
+    <aside class="sidebar">
             <div class="logo">
                 <img src="/img/Group 12 24.png" alt="Ladon Logo">
             </div>
-            <nav class="navbar">
-            <ul class="nav-list">
-                <li class="nav-item"><a href="http://localhost:8000/dashboard"><li class="nav-item">Dashboard</a></li>
-                <li class="nav-item"><a href="http://localhost:8000/inventory">Inventory Management</a></li>
-                <li class="nav-item"><a href="orders.php">Order Processing</a></li>
-                <li class="nav-item"><a href="analytics.php">Sale Analytics</a></li>
-                <li class="nav-item"><a href="marketing.php">Marketing Tools</a></li>
-                <li class="nav-item"><a href="support.php">Customer Support</a></li>
-                <li class="nav-item"><a href="settings.php">Settings</a></li>
-            </ul>
-            </nav>
+            <div id="sidebar-container"></div>
         </aside>
+
 
         <main class="inventory-content">
             <header class="inventory-header">
@@ -37,7 +44,7 @@
 
             <section class="inventory-dashboard-content">
                 <h1 class="inventory-title">Welcome to your inventory dashboard, 
-                    <?php echo isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest'; ?>!
+                <?php echo isset($_SESSION['user']['name']) ? htmlspecialchars($_SESSION['user']['name']) : 'Guest'; ?>!
                 </h1>
 
                 <div class="inventory-actions">
@@ -73,4 +80,5 @@
         </main>
     </div>
 </body>
+<script src="/js/reusable.js"></script>
 </html>
