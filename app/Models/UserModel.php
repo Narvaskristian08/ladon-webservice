@@ -29,34 +29,40 @@ class UserModel {
 
     // ✅ User Login with "Remember Me"
     public function loginUser($email, $password, $rememberMe = false) {
-        // ✅ Prevent multiple sessions
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-    
         $user = $this->findUserByEmail($email);
     
+        if (!$user) {
+            return ["error" => "User not found. Please register first."];
+            exit;
+        }
+    
         if ($user && password_verify($password, $user['password'])) {
+            session_start();
+    
+            // ✅ Store user session
             $_SESSION['user'] = [
                 'id' => $user['id'],
                 'email' => $user['email'],
                 'level_type' => $user['level_type']
             ];
     
+            // ✅ If "Remember Me" is checked, store in cookies
             if ($rememberMe) {
-                $token = bin2hex(random_bytes(32));
-                setcookie("user_email", $email, time() + (86400 * 30), "/");
+                $token = bin2hex(random_bytes(32)); // Generate secure token
+                setcookie("user_email", $email, time() + (86400 * 30), "/"); // 30 days
                 setcookie("auth_token", $token, time() + (86400 * 30), "/");
     
+                // ✅ Save token in DB for validation
                 $stmt = $this->db->prepare("UPDATE users SET auth_token = ? WHERE email = ?");
                 $stmt->execute([$token, $email]);
             }
     
-            return ["message" => "Login successful", "user" => $_SESSION['user']];
+            return ["message" => "Login successful", "redirect" => "/dashboard"];
         } else {
             return ["error" => "Invalid email or password"];
         }
     }
+    
     
     public function getTotalUsers() {
         $stmt = $this->db->query("SELECT COUNT(*) as total_users FROM users WHERE level_type = 'user'");

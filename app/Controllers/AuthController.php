@@ -42,10 +42,7 @@ class AuthController {
     // ✅ Login user
     public function login() {
         header('Content-Type: application/json');
-    
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+        session_start();
     
         $inputData = json_decode(file_get_contents("php://input"), true);
     
@@ -56,25 +53,18 @@ class AuthController {
     
         $email = $inputData['email'];
         $password = $inputData['password'];
+        $rememberMe = $inputData['remember_me'] ?? false;
     
-        $user = $this->userModel->findUserByEmail($email);
+        $result = $this->userModel->loginUser($email, $password, $rememberMe);
     
-        if ($user && password_verify($password, $user['password'])) {
-            // ✅ Ensure "name" is included in the session
-            $_SESSION['user'] = [
-                'id' => $user['id'],
-                'name' => $user['name'], 
-                'email' => $user['email'],
-                'level_type' => $user['level_type']
-            ];
-    
-            echo json_encode(["message" => "Login successful", "redirect" => "/dashboard"]);
-            exit;
+        if (isset($result['error'])) {
+            echo json_encode($result); // Send error message to frontend
         } else {
-            echo json_encode(["error" => "Invalid email or password"]);
+            echo json_encode(["message" => "Login successful!", "redirect" => $result['redirect']]);
             exit;
         }
     }
+    
     
     
     

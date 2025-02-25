@@ -59,16 +59,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 const text = await response.text();
                 console.log("Raw API Response:", text);
 
-                const jsonStart = text.indexOf("{");
-                const jsonText = text.substring(jsonStart).trim();
-                const result = JSON.parse(jsonText);
+                try {
+                    const result = JSON.parse(text); // ✅ Parse JSON only if it's valid
 
-                if (response.ok) {
-                    alert("Login successful!");
-                    window.location.href = result.redirect;
-                } else {
-                    alert(result.error || "Login failed.");
+                    if (response.ok) {
+                        alert("Login successful!");
+                        window.location.href = result.redirect;
+                    } else {
+                        alert(result.error || "Login failed.");
+                    }
+                } catch (jsonError) {
+                    console.error("JSON Parse Error:", jsonError);
+                    alert("Please Register first");
                 }
+
             } catch (error) {
                 console.error("Fetch Error:", error);
                 alert("Something went wrong.");
