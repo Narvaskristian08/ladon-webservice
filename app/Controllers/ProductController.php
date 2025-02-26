@@ -21,6 +21,12 @@ class ProductController {
             exit;
         }
     }
+    public function totalproduct() {
+        header('Content-Type: application/json');
+        $totalProducts = $this->productModel->getTotalProduct();
+        echo json_encode(["total_products" => $totalProducts]);
+        exit;
+    }
 
     // ✅ Get a single product
     public function show($id) {

@@ -60,12 +60,16 @@ Router::add('POST', '/api/products/{id}', function($id) {
         echo json_encode(["error" => "Invalid Method"]);
     }
 });
+Router::add('GET', '/api/products/total', function() {
+    (new ProductController())->totalproduct();
+});
 
 
 // ✅ Delete a product
 Router::add('DELETE', '/api/products/{id}', function($id) {
     (new ProductController())->delete($id);
 });
+
 
 
 

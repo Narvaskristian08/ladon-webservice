@@ -43,6 +43,11 @@ class ProductModel {
         }
     }
     
+    public function getTotalProduct() {
+        $stmt = $this->db->query("SELECT COUNT(*) as total_product FROM products");
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total_product'] ?? 0;
+    }
     
     
 
