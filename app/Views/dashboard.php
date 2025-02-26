@@ -6,6 +6,7 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
+//  Redirect if not admin
 if ($_SESSION['user']['level_type'] !== 'admin') {
     header("Location: /home");
     exit();
@@ -13,6 +14,7 @@ if ($_SESSION['user']['level_type'] !== 'admin') {
 
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +55,7 @@ if ($_SESSION['user']['level_type'] !== 'admin') {
 </div>
 
 <script src="/js/dashboard.js"></script>
-<script src="/js/auth.js"></script>
+<<script src="/js/auth.js"></script>
 
 </body>
 </html>

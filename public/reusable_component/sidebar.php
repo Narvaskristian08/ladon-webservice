@@ -10,7 +10,7 @@
             <li class="nav-item"><a href="/analytics">Sale Analytics</a></li>
             <li class="nav-item"><a href="/marketing">Marketing Tools</a></li>
             <li class="nav-item"><a href="/support">Customer Support</a></li>
-            <li class="nav-item"><a href="/settings">Settings</a></li>
+            <li class="nav-item"><a href="/settings-admin">Settings</a></li>
             <li class="nav-item"><a href="#" id="logoutBtn">Logout</a></li>
         </ul>
     </nav>
