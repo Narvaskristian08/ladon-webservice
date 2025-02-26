@@ -1,19 +1,11 @@
 <?php 
 session_start();
-
-echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
-
-
-
 //  Ensure user is logged in
 if (!isset($_SESSION['user'])) {
     header("Location: /auth");
     exit();
 }
 
-//  Redirect if not admin
 if ($_SESSION['user']['level_type'] !== 'admin') {
     header("Location: /home");
     exit();
@@ -34,12 +26,8 @@ if ($_SESSION['user']['level_type'] !== 'admin') {
 
 <body>
 <div class="dashboard">
-        <aside class="sidebar">
-            <div class="logo">
-                <img src="/img/Group 12 24.png" alt="Ladon Logo">
-            </div>
-            <div id="sidebar-container"></div>
-        </aside>
+    
+<?php include __DIR__ . '/../../public/reusable_component/sidebar.php'; ?>
 
         <main class="content">
             <header class="header">
@@ -65,6 +53,7 @@ if ($_SESSION['user']['level_type'] !== 'admin') {
 </div>
 
 <script src="/js/dashboard.js"></script>
-<script src="/js/reusable.js"></script>
+<script src="/js/auth.js"></script>
+
 </body>
 </html>

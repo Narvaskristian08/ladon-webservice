@@ -1,9 +1,14 @@
 <?php 
 session_start();
-
 //  Ensure user is logged in
 if (!isset($_SESSION['user'])) {
     header("Location: /auth");
+    exit();
+}
+
+//  Redirect if not admin
+if ($_SESSION['user']['level_type'] !== 'admin') {
+    header("Location: /home");
     exit();
 }
 
@@ -23,12 +28,7 @@ if (!isset($_SESSION['user'])) {
 
 <body>
     <div class="inventory-dashboard">
-        <aside class="sidebar">
-            <div class="logo">
-                <img src="/img/Group 12 24.png" alt="Ladon Logo">
-            </div>
-            <div id="sidebar-container"></div>
-        </aside>
+    <?php include __DIR__ . '/../../public/reusable_component/sidebar.php'; ?>
 
         <main class="inventory-content">
             <header class="inventory-header">
@@ -103,5 +103,5 @@ if (!isset($_SESSION['user'])) {
 </body>
 <script src="/js/inventory.js"></script>
 <script src="/js/modal.js"></script>
-<script src="/js/reusable.js"></script>
+<script src="/js/auth.js"></script>
 </html>
