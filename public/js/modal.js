@@ -4,14 +4,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const addProductBtn = document.querySelector(".inventory-add-btn");
     const editProductBtn = document.querySelector(".inventory-edit-btn");
     const productForm = document.getElementById("productForm");
-    let editingProductId = null;
 
     // ✅ Open Add Product Modal
     addProductBtn.addEventListener("click", function () {
         document.getElementById("modalTitle").innerText = "Add Product";
         productForm.reset();
-        editingProductId = null; // Reset Editing Mode
-        modal.style.display = "block";
+        document.getElementById("productId").value = ""; // Reset Editing Mode
+        modal.style.display = "flex";
     });
 
     // ✅ Close Modal
@@ -19,45 +18,98 @@ document.addEventListener("DOMContentLoaded", function () {
         modal.style.display = "none";
     });
 
+    // ✅ Open Edit Product Modal
+    editProductBtn.addEventListener("click", async function () {
+        const selectedCheckbox = document.querySelector("input[type='checkbox']:checked");
+        if (!selectedCheckbox) {
+            alert("Please select a product to edit.");
+            return;
+        }
+
+        const productId = selectedCheckbox.getAttribute("data-id");
+
+        try {
+            const response = await fetch(`http://localhost:8000/api/products/${productId}`);
+            const text = await response.text();
+            console.log("🔍 Raw API Response:", text);
+
+            const product = JSON.parse(text);
+
+            if (!product || product.error) {
+                alert("❌ Product not found.");
+                return;
+            }
+
+            // ✅ Populate form fields with product data
+            document.getElementById("productName").value = product.product_name || "";
+            document.getElementById("productCategory").value = product.product_category || "";
+            document.getElementById("productStock").value = product.stock || "0";
+            document.getElementById("productPrice").value = product.product_price || "0.00";
+            document.getElementById("productId").value = productId;
+            document.getElementById("modalTitle").innerText = "Edit Product";
+            modal.style.display = "flex";
+        } catch (error) {
+            console.error("❌ Error fetching product details:", error);
+        }
+    });
+
     // ✅ Handle Form Submission (Add/Edit)
     productForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
+        const productId = document.getElementById("productId").value;
         const productName = document.getElementById("productName").value;
         const productCategory = document.getElementById("productCategory").value;
         const productStock = document.getElementById("productStock").value;
         const productPrice = document.getElementById("productPrice").value;
-        const productImage = document.getElementById("productImage").files[0];
+        const productImage = document.getElementById("productImage").files[0]; // ✅ Get File
+
+        if (!productName || !productStock || !productPrice) {
+            alert("❌ Please fill in all required fields.");
+            return;
+        }
 
         const formData = new FormData();
-        formData.append("name", productName);
-        formData.append("category", productCategory);
-        formData.append("stock_quantity", productStock);
-        formData.append("price", productPrice);
-        if (productImage) formData.append("image", productImage);
+        formData.append("product_name", productName);
+        formData.append("product_category", productCategory);
+        formData.append("stock", productStock);
+        formData.append("product_price", productPrice);
+        if (productImage) {
+            formData.append("product_image", productImage); // ✅ Append Image
+        }
 
         let url = "http://localhost:8000/api/products";
-        let method = "POST"; // Default to Add
+        let method = "POST"; // ✅ Default to Add
 
-        if (editingProductId) {
-            url = `http://localhost:8000/api/products/${editingProductId}`;
-            method = "PUT"; // Change to Edit
+        if (productId) {
+            url = `http://localhost:8000/api/products/${productId}`;
+            formData.append("_method", "PUT"); // ✅ Override method for PHP
         }
 
         try {
             const response = await fetch(url, {
-                method: method,
-                body: formData
+                method: "POST", // ✅ Use POST even for updates (Laravel-style override)
+                body: formData,
             });
 
-            const result = await response.json();
-            alert(result.message);
-            modal.style.display = "none"; // Close modal after success
+            const text = await response.text();
+            console.log("🔍 Raw API Response:", text);
 
-            fetchProducts(); // Refresh table
+            if (!text.trim()) {
+                throw new Error("❌ Empty JSON Response");
+            }
+
+            const result = JSON.parse(text);
+            if (result.error) {
+                alert("❌ Error: " + result.error);
+            } else {
+                alert(result.message);
+                modal.style.display = "none";
+                fetchProducts(); // ✅ Refresh Product List
+            }
         } catch (error) {
-            console.error("Error:", error);
-            alert("Something went wrong.");
+            console.error("❌ Error submitting form:", error);
+            alert("Something went wrong. Please try again.");
         }
     });
 });

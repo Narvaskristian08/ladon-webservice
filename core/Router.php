@@ -12,8 +12,11 @@ class Router {
         $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
         foreach (self::$routes as $route) {
-            if ($route['method'] === $requestMethod && $route['route'] === $requestUri) {
-                call_user_func($route['callback']);
+            // ✅ Convert {id} placeholders to dynamic regex matching
+            $pattern = preg_replace('/\{[a-zA-Z0-9_]+\}/', '([0-9]+)', $route['route']);
+            if ($route['method'] === $requestMethod && preg_match("#^$pattern$#", $requestUri, $matches)) {
+                array_shift($matches); // Remove full match
+                call_user_func_array($route['callback'], $matches);
                 return;
             }
         }

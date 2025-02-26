@@ -28,6 +28,7 @@ class Migration {
             $db->exec("CREATE TABLE IF NOT EXISTS products (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 product_image LONGBLOB, 
+                product_category VARCHAR(255) NOT NULL,
                 product_name VARCHAR(255) NOT NULL,
                 product_price INT NOT NULL,
                 stock INT NOT NULL,

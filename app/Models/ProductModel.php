@@ -11,21 +11,44 @@ class ProductModel {
 
     // ✅ Get all products
     public function getAllProducts() {
-        $stmt = $this->db->query("SELECT product_name,product_price, stock FROM products");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $stmt = $this->db->query("SELECT id, product_name, product_category, stock, product_price, product_image, created_at FROM products");
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception("Database fetch error");
+        }
     }
 
-    // ✅ Add a new product
-    public function addProduct($name, $price,$image,$stock) {
-        $stmt = $this->db->prepare("INSERT INTO products (product_name, product_price,product_image,stock) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$name, $price,$image,$stock]);
-        return ["message" => "Product added successfully"];
+    // ✅ Get product by ID
+    public function getProductById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM products WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // ✅ Delete a product by ID
+    // ✅ Add product
+    public function addProduct($name, $category, $stock, $price, $image = null) {
+        $stmt = $this->db->prepare("INSERT INTO products (product_name, product_category, stock, product_price, product_image) VALUES (?, ?, ?, ?, ?)");
+        return $stmt->execute([$name, $category, $stock, $price, $image]);
+    }
+
+    // ✅ Update product
+    public function updateProduct($id, $name, $category, $stock, $price, $image = null) {
+        if ($image) {
+            $stmt = $this->db->prepare("UPDATE products SET product_name = ?, product_category = ?, stock = ?, product_price = ?, product_image = ? WHERE id = ?");
+            return $stmt->execute([$name, $category, $stock, $price, $image, $id]);
+        } else {
+            $stmt = $this->db->prepare("UPDATE products SET product_name = ?, product_category = ?, stock = ?, product_price = ? WHERE id = ?");
+            return $stmt->execute([$name, $category, $stock, $price, $id]);
+        }
+    }
+    
+    
+    
+
+    // ✅ Delete product
     public function deleteProduct($id) {
         $stmt = $this->db->prepare("DELETE FROM products WHERE id = ?");
-        $stmt->execute([$id]);
-        return ["message" => "Product deleted successfully"];
+        return $stmt->execute([$id]);
     }
 }
