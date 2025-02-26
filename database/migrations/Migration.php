@@ -18,6 +18,7 @@ class Migration {
                 email VARCHAR(255) UNIQUE NOT NULL,
                 password VARCHAR(255) NOT NULL,
                 contact VARCHAR(20) NOT NULL, 
+                profile_image LONGBLOB NULL,
                 level_type VARCHAR(255) NULL,
                 auth_token VARCHAR(255) NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -84,7 +85,7 @@ class Migration {
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                 FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
             )");
-            echo "✅ Table 'history' created successfully!\n";
+            echo " Table 'history' created successfully!\n";
 
      
             $db->exec("CREATE TABLE IF NOT EXISTS cart (

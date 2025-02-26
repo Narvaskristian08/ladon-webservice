@@ -1,25 +1,32 @@
 document.addEventListener("DOMContentLoaded", function () {
     const signupForm = document.getElementById("signupForm");
     const loginForm = document.getElementById("loginForm");
-    const logoutBtn = document.getElementById("logoutBtn"); // ✅ Logout Button
 
-    // ✅ Register User
+    // ✅ Register User with Confirm Password Validation
     if (signupForm) {
         signupForm.addEventListener("submit", async function (event) {
             event.preventDefault();
 
-            const name = document.getElementById("signup-name").value;
-            const email = document.getElementById("signup-email").value;
-            const password = document.getElementById("signup-password").value;
-            const contact = document.getElementById("signup-contact").value;
+            const name = document.getElementById("signup-name").value.trim();
+            const email = document.getElementById("signup-email").value.trim();
+            const password = document.getElementById("signup-password").value.trim();
+            const confirmPassword = document.getElementById("signup-confirm-password").value.trim();
+            const contact = document.getElementById("signup-contact").value.trim();
 
-            if (!name || !email || !password || !contact) {
-                alert("Please fill in all fields.");
+            // ✅ Confirm Password Validation
+            if (password !== confirmPassword) {
+                alert("❌ Passwords do not match!");
+                return;
+            }
+
+            // ✅ Basic Input Validation
+            if (!name || !email || !password || !confirmPassword || !contact) {
+                alert("❌ Please fill in all fields.");
                 return;
             }
 
             try {
-                const response = await fetch("http://localhost:8000/api/register", { 
+                const response = await fetch("http://localhost:8000/api/register", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ name, email, password, contact })
@@ -29,12 +36,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (response.ok) {
                     alert(result.message);
-                    window.location.href = "/auth"; 
+                    window.location.href = "/auth"; // Redirect to login page
                 } else {
-                    alert(result.error || "Registration failed.");
+                    alert(result.error || "❌ Registration failed.");
                 }
             } catch (error) {
-                console.error("Error:", error);
+                console.error("❌ Error:", error);
                 alert("Something went wrong. Please try again.");
             }
         });
@@ -45,37 +52,27 @@ document.addEventListener("DOMContentLoaded", function () {
         loginForm.addEventListener("submit", async function (event) {
             event.preventDefault();
 
-            const email = document.getElementById("login-email").value;
-            const password = document.getElementById("login-password").value;
+            const email = document.getElementById("login-email").value.trim();
+            const password = document.getElementById("login-password").value.trim();
 
             try {
                 const response = await fetch("http://localhost:8000/api/login", {
                     method: "POST",
-                    credentials: "include",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ email, password })
                 });
 
-                const text = await response.text();
-                console.log("Raw API Response:", text);
+                const result = await response.json();
 
-                try {
-                    const result = JSON.parse(text); // ✅ Parse JSON only if it's valid
-
-                    if (response.ok) {
-                        alert("Login successful!");
-                        window.location.href = result.redirect;
-                    } else {
-                        alert(result.error || "Login failed.");
-                    }
-                } catch (jsonError) {
-                    console.error("JSON Parse Error:", jsonError);
-                    alert("Please Register first");
+                if (response.ok && result.redirect) {
+                    alert("✅ Login successful!");
+                    window.location.href = result.redirect; // Redirect user based on role
+                } else {
+                    alert(result.error || "❌ Login failed.");
                 }
-
             } catch (error) {
-                console.error("Fetch Error:", error);
-                alert("Something went wrong.");
+                console.error("❌ Error:", error);
+                alert("Something went wrong. Please try again.");
             }
         });
     }

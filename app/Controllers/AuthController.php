@@ -9,7 +9,7 @@ class AuthController {
         $this->userModel = new UserModel();
     }
 
- 
+    // ✅ Register User
     public function register() {
         header('Content-Type: application/json');
 
@@ -30,6 +30,7 @@ class AuthController {
         echo json_encode($result);
         exit;
     }
+
     public function totalUsers() {
         header('Content-Type: application/json');
         $totalUsers = $this->userModel->getTotalUsers();
@@ -37,26 +38,23 @@ class AuthController {
         exit;
     }
 
-    
-
-    // ✅ Login user
+    // ✅ Login User
     public function login() {
         header('Content-Type: application/json');
         session_start();
-    
+
         $inputData = json_decode(file_get_contents("php://input"), true);
-    
+
         if (!isset($inputData['email'], $inputData['password'])) {
             echo json_encode(["error" => "Missing email or password"]);
             return;
         }
-    
+
         $email = $inputData['email'];
         $password = $inputData['password'];
-        $rememberMe = $inputData['remember_me'] ?? false;
-    
-        $result = $this->userModel->loginUser($email, $password, $rememberMe);
-    
+
+        $result = $this->userModel->loginUser($email, $password);
+
         if (isset($result['error'])) {
             echo json_encode($result); // Send error message to frontend
         } else {
@@ -64,28 +62,17 @@ class AuthController {
             exit;
         }
     }
-    
-    
-    
-    
-      
+
     public function logout() {
         header('Content-Type: application/json');
         session_start();
-    
+
         // ✅ Clear session
         $_SESSION = [];
         session_unset();
         session_destroy();
-    
-        // ✅ Clear cookies
-        setcookie("user_email", "", time() - 3600, "/");
-        setcookie("auth_token", "", time() - 3600, "/");
-    
+
         echo json_encode(["message" => "Logout successful", "redirect" => "/auth"]);
         exit;
     }
-    
-    
-    
 }

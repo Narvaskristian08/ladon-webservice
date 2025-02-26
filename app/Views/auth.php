@@ -85,6 +85,14 @@
                     <img src="img/svg/Noeye.svg" class="toggle-password" id="toggleSignupPassword" alt="Toggle Password">
                 </div>
             </div>
+            <div class="signup-input-container">
+            <label class="signup-input-label" for="signup-confirm-password">Confirm Password</label>
+    <div class="signup-input-group">
+        <img src="/img/svg/Password.svg" class="signup-input-icon" alt="Password">
+        <input type="password" id="signup-confirm-password" placeholder="Confirm your password" required>
+        <img src="img/svg/Noeye.svg" class="toggle-password" id="toggleConfirmPassword" alt="Toggle Password">
+    </div>
+</div>
 
             <div class="signup-input-container">
         <label class="signup-input-label" for="signup-contact">Contact</label>
@@ -95,11 +103,6 @@
     </div>
 
             <button type="submit" class="signup-btn">SIGNUP</button>
-            <p class="or-text">or</p>
-            <div class="signup-social-login">
-                <a href="#" class="signup-social-btn"><img src="/img/Facebook.png" alt="Facebook"></a>
-                <a href="#" class="signup-social-btn"><img src="/img/Google.png" alt="Google"></a>
-            </div>
         </form>
 
         <p class="signup-text">Already have an account? <a href="#" id="showLogin">Login</a></p>

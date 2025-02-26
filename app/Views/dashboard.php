@@ -1,6 +1,12 @@
 <?php 
 session_start();
 
+echo "<pre>";
+print_r($_SESSION);
+echo "</pre>";
+
+
+
 //  Ensure user is logged in
 if (!isset($_SESSION['user'])) {
     header("Location: /auth");
@@ -12,6 +18,7 @@ if ($_SESSION['user']['level_type'] !== 'admin') {
     header("Location: /home");
     exit();
 }
+
 
 ?>
 
